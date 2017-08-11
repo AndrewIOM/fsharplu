@@ -9,7 +9,7 @@ Some of the provided utilities are just thin `let`-bindings wrappers around exis
 
 ## Build status
 
-[![Build status](https://ci.appveyor.com/api/projects/status/y2lrc49c0lxprg77?svg=true)](https://ci
+[![Build status](https://ci.appveyor.com/api/projects/status/y2lrc49c0lxprg77?svg=true)](https://ci.appveyor.com/project/blumu/fsharplu)
 
 ## Documentation
 
