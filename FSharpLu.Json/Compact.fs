@@ -1,15 +1,16 @@
 ﻿namespace Microsoft.FSharpLu.Json
 
+open System.Reflection
 open Newtonsoft.Json
 open Newtonsoft.Json.Serialization
 open Microsoft.FSharp.Reflection  
 
 module private ConverterHelpers =
     let inline stringEq (a:string) (b:string) =
-        a.Equals(b, System.StringComparison.InvariantCultureIgnoreCase)
+        a.Equals(b, System.StringComparison.OrdinalIgnoreCase)
 
     let inline isOptionType (t:System.Type) =
-       t.IsGenericType && t.GetGenericTypeDefinition() = typedefof<option<_>>
+       t.GetTypeInfo().IsGenericType && t.GetGenericTypeDefinition() = typedefof<option<_>>
 
     let inline toCamel (name:string) =
         if System.Char.IsLower (name, 0) then name
@@ -37,7 +38,7 @@ type CompactUnionJsonConverter() =
         // Include F# discriminated unions
         FSharpType.IsUnion objectType
         // and exclude the standard FSharp lists (which are implemented as discriminated unions)
-        && not (objectType.IsGenericType && objectType.GetGenericTypeDefinition() = typedefof<_ list>)
+        && not (objectType.GetTypeInfo().IsGenericType && objectType.GetGenericTypeDefinition() = typedefof<_ list>)
 
     override __.WriteJson(writer:JsonWriter, value:obj, serializer:JsonSerializer) =
         let convertName = 
@@ -114,7 +115,7 @@ type CompactUnionJsonConverter() =
 
             // Json that is not null must map to `Some _`
             else
-                let nestedType = objectType.GetGenericArguments().[0]
+                let nestedType = objectType.GetTypeInfo().GetGenericArguments().[0]
 
                 // Try to retrieve the 'Some' attribute:
                 // if the specified Json an object of the form `{ "Some" = token }`
@@ -122,7 +123,7 @@ type CompactUnionJsonConverter() =
                 let tryGetSomeAttributeValue (jToken:Linq.JToken) =
                     if jToken.Type = Linq.JTokenType.Object then
                         let jObject = jToken :?> Linq.JObject
-                        match jObject.TryGetValue (SomeFieldIdentifier, System.StringComparison.InvariantCultureIgnoreCase) with
+                        match jObject.TryGetValue (SomeFieldIdentifier, System.StringComparison.OrdinalIgnoreCase) with
                         | true, token -> Some token
                         | false, _ -> None
                     else

@@ -1,12 +1,5 @@
-﻿#r @"System.dll"
-#r @"System.Core.dll"
-#r @"..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll"
+﻿#r "bin/Debug/netstandard2.0/Microsoft.FSharpLu.Json.dll"
 
-#load "Helpers.fs"
-#load "WithFunctor.fs"
-#load "NewtonSoft.fs"
-#load "Compact.fs"
-#load "BackwardCompatible.fs"
 open Microsoft.FSharpLu.Json
 
 type WithFields = SomeField of int * int
