@@ -10,8 +10,7 @@ before_build:
 - appveyor-retry dotnet restore "FSharpLu.Json/FSharpLu.Json.fsproj" -v Minimal
 build_script:
 - dotnet build "FSharpLu.Json/FSharpLu.Json.fsproj" -c %CONFIGURATION% --version-suffix %LABEL%
-- appveyor PushArtifact FSharpLu.Json.1.0.0.nupkg
 artifacts:
-- path: artifacts\**\*.*
+- path: '**\*.nupkg'
 cache:
 - '%USERPROFILE%\.nuget\packages'
